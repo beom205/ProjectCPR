@@ -1,0 +1,28 @@
+/*헤더(로고) 작업*/
+#header {
+    width: 100%;
+    top: 0;
+    text-align: center;
+    margin-top: 8px;
+   }
+#header {box-shadow: 0 4px 6px rgba(17, 17, 56, 0.11), 0 1px 3px rgba(0,0,0,0.08); }
+#header .logo {width: 120px;  margin: 0 auto; } /*로고 사이즈 설정 & 가운데 정렬*/
+#header .logo img{width: 100%;} /*이미지 설정*/
+
+/*콘텐츠*/
+.word {margin-top:170px; text-align: center; }
+.word h1 { font-size: 3rem; font-family: 'Nanum Pen Script', cursive;}
+.word span {margin-top: 25px; font-size: 18px; display: block; color:gray; }
+
+/*업로드*/
+.upload {text-align: center; margin-top: 90px;}
+.btn {width: 60px; height: 40px; border-radius: 20%; font-size: 16px; font-weight: 600;background-color:#FFC500; transition: transform 0.5s ease;
+border: 0;box-shadow: 0 4px 6px rgba(17, 17, 56, 0.11);cursor: pointer;}
+.btn:hover {transform:translate(10px,-10px);}
+
+/*결과 페이지*/
+.content {position: relative;}
+.result {position: absolute; top: 280px; right: 270px; }
+.result h1 {font-size: 70px; display: inline-block;}
+.result P {font-size: 70px; color: red; display: inline-block; margin-left: 15px;}
+.img img { width: 400px; position: absolute; top: 200px; left: 270px;}
