@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="reset.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}">
     <link href="https://fonts.googleapis.com/css?family=Nanum+Pen+Script&display=swap" rel="stylesheet">
     <script 
         src="https://code.jquery.com/jquery-3.4.1.min.js"
@@ -17,25 +17,22 @@
     <!--헤더-->
     <header id="header">
         <div class="logo">
-            <a href="#"></a><img src="로고_블랙.png" alt="로고"></a>
+            <a href="#"></a><img src="{{ url_for('static', filename='img/res/logo_b.png') }}" alt="로고"></a>
         </div>
     </header> 
     <!--//헤더-->
     <!--콘텐츠-->
-    <div class="wrap_content">
-        <div class="content">  
-            <div class="img">
-                <img src="폐.jpeg" alt="폐사진">
-            </div>  
-            <div class="result">
-                <h1>폐렴</h1><p>입니다</p>
-            </div>
-        </div>
+    <div class="word">
+        <h1>X-Ray 영상을 통한 폐렴 여부 진단</h1>
+        <span>파일을 업로드 하세요</span>
+    </div>
+    <div class="upload">
+        <form action = "/imgs" method = "POST" enctype = "multipart/form-data"> 
+            <input type="file" name="file">
+            <input class="btn" type="submit" value="제출">
+        </form>   
     </div>
     <!--//콘텐츠-->
-  
-    <script>
-
-    </script>
+    
 </body>
 </html>
