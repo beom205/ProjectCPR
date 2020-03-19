@@ -7,6 +7,7 @@ from keras.applications.resnet_v2 import ResNet50V2
 from keras.layers import Conv2D
 
 from keras import backend as K
+import tensorflow as tf
 
 class SemiModel():
     def __init__(self, model_path):
@@ -44,7 +45,7 @@ class SemiModel():
 
     def predict_using_path(self, img_path):
         img = self.preprocessing_on_path(img_path)
-        img = np.reshape(img, (1, self.IMG_HEIGHT, self.IMG_WIDTH, 3))
+        img = np.reshape(img, (-1, self.IMG_HEIGHT, self.IMG_WIDTH, 3))
         with self.graph.as_default():
             predict_value = self.model.predict(img)
         	prob = np.asscalar(predict_value)
@@ -54,8 +55,9 @@ class SemiModel():
     def cam(self, img_path):
 
         last_conv_layer = self.model.get_layer(index = -5)
-
+        
         x = self.preprocessing_on_path(img_path)
+        x = np.reshape(x, (1, self.IMG_HEIGHT, self.IMG_WIDTH, 3))
         with self.graph.as_default():
             grads = K.gradients(self.model.output, last_conv_layer.output)
 
