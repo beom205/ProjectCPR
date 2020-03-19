@@ -19,3 +19,7 @@ big_image.setAttribute("src",img_src);
 click_img = document.querySelector("#big p");
 click_img.style.display="none";
 }
+
+//제출 버튼을 클릭하면 모달창이 뜨도록
+var btn = document.querySelector(".btn");
+console.log(btn);
