@@ -17,13 +17,18 @@ app.config['UPLOAD_FOLDER'] = IMG_FOLDER
 #폐렴 분류 모델 로딩
 #PredictModel = SemiModel('v3_10-0.2601.hdf5')
 
-@app.route('/upload2')
+@app.route('/upload')
 def render_file():
    return render_template('upload.html')
 
 @app.route('/')
 def main_page():
   return render_template('index.html')
+
+@app.route('/result')
+def result_page():
+  return render_template('result.html')
+
 
 #이미지 서버에 저장 후 result page에 노출하기
 @app.route('/imgs',methods=['GET','POST'])
