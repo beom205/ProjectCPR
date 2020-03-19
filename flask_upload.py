@@ -20,6 +20,11 @@ def render_file():
 def main_page():
   return render_template('index.html')
 
+@app.route('/result')
+def result_page():
+  return render_template('result3.html')
+
+
 #이미지 서버에 저장 후 result page에 노출하기
 @app.route('/imgs',methods=['GET','POST'])
 def upload_imgs():
