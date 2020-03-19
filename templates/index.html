@@ -27,8 +27,8 @@
         <span>파일을 업로드 하세요</span>
     </div>
     <div class="upload">
-        <form action = "/result" method = "get"> 
-            <input type="file" id="files" name="files" multiple>
+        <form action = "/imgs" method = "POST" enctype="multipart/form-data"> 
+            <input type="file" id="files" name="file[]" multiple>
             <input class="btn" type="submit" value="제출">
         </form>  
     </div>
