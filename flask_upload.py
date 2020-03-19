@@ -51,7 +51,8 @@ def upload_imgs():
     resultData = {'imgs' : full_filename, 'acc' : acc, 'isPneumonia' : isPneumonia}
     
     #print("#resultData : ",resultData)
-    return render_template("result.html", resultData = resultData)
+    #return render_template("result.html", resultData = resultData)
+    return render_template("result3.html", resultData = resultData)
 
 @app.route('/text', methods=['GET','POST'])
 def upload_text():
