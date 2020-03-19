@@ -29,7 +29,7 @@ def upload_imgs():
     img.save(full_filename)
 
     #저장할 경로 + 파일명
-    return render_template("result.html", imgs = full_filename)
+    return render_template("result3.html", imgs = full_filename)
 
 @app.route('/text', methods=['GET','POST'])
 def upload_text():
