@@ -6,11 +6,7 @@ from keras.layers import Dense, Dropout, Flatten, MaxPooling2D
 from keras.applications.resnet_v2 import ResNet50V2
 from keras.layers import Conv2D
 
-#from keras.applications.vgg16 import VGG16
-import matplotlib.image as mpimg
 from keras import backend as K
-import matplotlib.pyplot as plt
-%matplotlib inline
 
 class SemiModel():
     def __init__(self, model_path):
@@ -50,59 +46,40 @@ class SemiModel():
         img = self.preprocessing_on_path(img_path)
         img = np.reshape(img, (1, self.IMG_HEIGHT, self.IMG_WIDTH, 3))
         with self.graph.as_default():
-        	  predict_value = self.model.predict(img)
-        	  prob = np.asscalar(predict_value)
+            predict_value = self.model.predict(img)
+        	prob = np.asscalar(predict_value)
 
         return prob
 
     def cam(self, img_path):
-        
-        #x = self.preprocessing_on_path(img_path)
 
-        #model = VGG16(weights='imagenet')
-        #model = self.load_model()
+        last_conv_layer = self.model.get_layer(index = -5)
 
-        model_layers = self.model.layers
-        i = len(model_layers) - 1
-        while(True):
-            if i < 0:
-                print('wrong model')
-                break
-            if type(self.model.layers[i]) == keras.layers.convolutional.Conv2D:
-                last_conv_layer = model_layers[i]
-                print('get conv')
-                break
-            i -= 1
-        x = cv2.imread(img_path, 1)
-        x = x/255.0
-        x = cv2.resize(x, dsize=(220, 220))
-        x = np.reshape(x, (1, 220, 220, 3))
+        x = self.preprocessing_on_path(img_path)
+        with self.graph.as_default():
+            grads = K.gradients(self.model.output, last_conv_layer.output)
 
-        #last_conv_layer = self.model.get_layer('conv2d_6')
+            pooled_grads = K.mean(grads[0], axis=(0,1,2))
 
-        grads = K.gradients(self.model.output, last_conv_layer.output)
+            iterate = K.function([self.model.input], [pooled_grads, last_conv_layer.output[0]])
 
-        pooled_grads = K.mean(grads[0], axis=(0,1,2))
+            pooled_grads_value, conv_layer_output_value = iterate([x])
 
-        iterate = K.function([self.model.input], [pooled_grads, last_conv_layer.output[0]])
+            for i in range(1024):
+                conv_layer_output_value[:,:,i] *= pooled_grads_value[i]
+            
+            heatmap = np.mean(conv_layer_output_value, axis = -1)
+            heatmap = np.maximum(heatmap,0)
+            heatmap /= np.max(heatmap)
 
-        pooled_grads_value, conv_layer_output_value = iterate([x])
+            img = cv2.imread(img_path)
+            heatmap = cv2.resize(heatmap, (img.shape[1], img.shape[0]))
+            heatmap = np.uint8(255 * heatmap)
+            heatmap = cv2.applyColorMap(heatmap, cv2.COLORMAP_JET)
 
-        for i in range(1024):
-            conv_layer_output_value[:,:,i] *= pooled_grads_value[i]
-        
-        heatmap = np.mean(conv_layer_output_value, axis = -1)
-        heatmap = np.maximum(heatmap,0)
-        heatmap /= np.max(heatmap)
+            hif = .8
+            superimposed_img = heatmap * hif + img
+        # output = 'gdrive/My Drive/output.jpeg'
+        # cv2.imwrite(output, superimposed_img)
 
-        x = cv2.imread(img_path, 1)
-        heatmap = cv2.resize(heatmap, (x.shape[1], x.shape[0]))
-        heatmap = np.uint8(255 * heatmap)
-        heatmap = cv2.applyColorMap(heatmap, cv2.COLORMAP_JET)
-
-        hif = .8
-        superimposed_img = heatmap * hif + x
-        output = 'gdrive/My Drive/output.jpeg'
-        cv2.imwrite(output, superimposed_img)
-
-        return output
+        return superimposed_img
