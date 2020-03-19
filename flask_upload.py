@@ -63,7 +63,7 @@ def upload_imgs():
 
     print("### resultDataList : ", resultDataList)
 
-    return render_template("result3.html", resultDataList = resultDataList)
+    return render_template("result.html", resultDataList = resultDataList)
 
 @app.route('/text', methods=['GET','POST'])
 def upload_text():
