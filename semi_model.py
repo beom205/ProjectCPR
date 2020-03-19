@@ -5,6 +5,7 @@ from keras.models import Sequential
 from keras.layers import Dense, Dropout, Flatten, MaxPooling2D
 from keras.applications.resnet_v2 import ResNet50V2
 from keras.layers import Conv2D
+import tensorflow as tf
 
 class SemiModel():
     def __init__(self, model_path):
@@ -39,7 +40,9 @@ class SemiModel():
         img = np.reshape(img, (1, self.IMG_HEIGHT, self.IMG_WIDTH, 3))
         with self.graph.as_default():
         	predict_value = self.model.predict(img)
-        return predict_value
+        	prob = np.asscalar(predict_value)
+
+        return 1 if prob > 0.5 else 0
 
     def preprocessing_on_path(self, img_path):
         img = cv2.imread(img_path)
