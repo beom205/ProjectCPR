@@ -12,7 +12,7 @@ IMG_FOLDER = os.path.join(os.path.join('static', 'img'),'upload_img')
 app.config['UPLOAD_FOLDER'] = IMG_FOLDER
 
 
-@app.route('/upload2')
+@app.route('/upload')
 def render_file():
    return render_template('upload.html')
 
@@ -22,7 +22,7 @@ def main_page():
 
 @app.route('/result')
 def result_page():
-  return render_template('result3.html')
+  return render_template('result.html')
 
 
 #이미지 서버에 저장 후 result page에 노출하기
@@ -34,7 +34,7 @@ def upload_imgs():
     img.save(full_filename)
 
     #저장할 경로 + 파일명
-    return render_template("result3.html", imgs = full_filename)
+    return render_template("result.html", imgs = full_filename)
 
 @app.route('/text', methods=['GET','POST'])
 def upload_text():
