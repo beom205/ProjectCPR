@@ -42,7 +42,7 @@ class SemiModel():
         	predict_value = self.model.predict(img)
         	prob = np.asscalar(predict_value)
 
-        return 1 if prob > 0.5 else 0
+        return prob
 
     def preprocessing_on_path(self, img_path):
         img = cv2.imread(img_path)
