@@ -13,7 +13,7 @@ class SemiModel():
         self.IMG_HEIGHT = 220
         self.model_path = model_path
         self.model = self.load_model()
-		self.graph = tf.get_default_graph()
+        self.graph = tf.get_default_graph()
 
     def define_model(self):
         model = Sequential()

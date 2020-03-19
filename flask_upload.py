@@ -1,16 +1,20 @@
 #import asyncio
 import matplotlib.pyplot as plt
 import json
-from flask import Flask, render_template, request, redirect, url_for
 import os
+from flask import Flask, render_template, request, redirect, url_for
+from semi_model import SemiModel
 #from functools import partial
 #from werkzeug import secure_filename
 
 app = Flask(__name__)
 
+#이미지 폴더 경로
 IMG_FOLDER = os.path.join(os.path.join('static', 'img'),'upload_img')
 app.config['UPLOAD_FOLDER'] = IMG_FOLDER
 
+#폐렴 분류 모델 로딩
+PredictModel = SemiModel('v3_10-0.2601.hdf5')
 
 @app.route('/upload2')
 def render_file():
@@ -28,8 +32,11 @@ def upload_imgs():
     full_filename = os.path.join(app.config['UPLOAD_FOLDER'], img.filename)
     img.save(full_filename)
 
+    #폐렴 분석
+    prob = PredictModel.predict_using_path(full_filename)
+    print("#결과 : ",prob)
     #저장할 경로 + 파일명
-    return render_template("result.html", imgs = full_filename)
+    return render_template("result.html", imgs = full_filename, result = prob)
 
 @app.route('/text', methods=['GET','POST'])
 def upload_text():
