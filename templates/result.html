@@ -18,7 +18,7 @@
     <!--헤더-->
     <header id="header">
         <div class="logo">
-            <a href="#"><img src="{{ url_for('static', filename='img/res/logo_w.png') }}" alt="로고"></a>
+            <a href="/"><img src="{{ url_for('static', filename='img/res/logo_w.png') }}" alt="로고"></a>
         </div>
     </header> 
     <!--//헤더-->
@@ -46,36 +46,14 @@
                     </div>
                     <img src="{{ url_for('static', filename='img/upload_img/person57_virus_113.jpeg') }}">
                 </li>
-                <li>
-                    <div class="info pne">
-                        <span>3</span>
-                        <span>폐렴</span>
-                        <span>정확도:94%</span>
-                    </div>
-                    <img src="{{ url_for('static', filename='img/upload_img/person77_virus_139.jpeg') }}">
-                </li>
-                <li>
-                    <div class="info normal">
-                        <span>4</span>
-                        <span>정상</span>
-                        <span>정확도:94%</span>
-                    </div>
-                    <img src="img/cctv1.jpg">
-                </li>
-                <li>
-                    <div class="info pne">
-                        <span>5</span>
-                        <span>폐렴</span>
-                        <span>정확도:94%</span>
-                    </div>
-                    <img src="img/sample.jpg">
-                </li> -->
+               -->
             </div>
         </div>
     </div>
     <!--//콘텐츠-->
     <script src="{{ url_for('static', filename='js/result.js') }}"></script>
     <script>
+
       var dataListJSON = '{{resultDataList|tojson}}';
       var dataListP = JSON.parse(dataListJSON);
       // console.log(dataListP);
@@ -100,13 +78,19 @@
 
         //li 엘리먼트 생성
         function createLiEle(index, data){
-          isPneumonia = (data.isPneumonia == 0)? "정상" : "폐렴의심";
+
+          index = parseInt(index)+1;
+          var  pnAcc = data.acc;
+          // console.log("data.isPneumonia : ",isPn)
+          isPnClass = ((data.isPneumonia == 0)? "normal" : ((pnAcc >= 80)? "pnedan":"pne"));
+          var pneText = "폐렴의심"
           var liEle = document.createElement("li");
+          
           liEle.innerHTML = `
-                    <div class="info normal">
+                    <div class="info ${isPnClass}">
                         <span>${index}</span>
-                        <span>${isPneumonia}</span>
-                        <span>정확도:${data.acc}%</span>
+                        <span>${pneText}</span>
+                        <span>${data.acc}%</span>
                     </div>
                     <img src="${data.imgs}">
                   `

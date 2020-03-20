@@ -47,8 +47,8 @@ class SemiModel():
         img = self.preprocessing_on_path(img_path)
         img = np.reshape(img, (-1, self.IMG_HEIGHT, self.IMG_WIDTH, 3))
         with self.graph.as_default():
-            predict_value = self.model.predict(img)
-        	prob = np.asscalar(predict_value)
+          predict_value = self.model.predict(img)
+          prob = np.asscalar(predict_value)
 
         return prob
 

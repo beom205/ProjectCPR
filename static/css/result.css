@@ -13,6 +13,8 @@ body {background-color: #161616;}
 .list li .info span {padding-left:12px; font-weight: 600;}
 .list .normal { background-color:rgb(102, 101, 101); color:black;}
 .list .pne {background-color:rgb(247, 207, 77);}
+/* 80% 이상 */
+.list .pnedan {background-color:rgb(235, 52, 28);}
 
 
 /*리스트 영역 스크롤*/

@@ -23,7 +23,7 @@
     <!--헤더-->
     <header id="header">
         <div class="logo">
-            <a href="#"></a><img src="{{ url_for('static', filename='img/res/logo_b.png') }}" alt="로고"></a>
+            <a href="/"><img src="{{ url_for('static', filename='img/res/logo_b.png') }}" alt="로고"></a>
         </div>
     </header> 
     <!--//헤더-->
@@ -33,13 +33,14 @@
         <span>파일을 업로드 하세요</span>
     </div>
     <div class="upload">
-        <form action = "/imgs" method = "POST" enctype="multipart/form-data"> 
+        <form id="fileUploadForm" action = "/imgs" method = "POST" enctype="multipart/form-data"> 
             <input type="file" id="files" name="file[]" multiple>
-            <button type="button" id="btn">로딩</button>
-            <input class="btn" type="submit" value="제출">
+            <input id="btn" class="btn" type="submit" value="제출">
         </form>  
     </div>
     <!--//콘텐츠-->
     <script src="{{ url_for('static', filename='js/modal.js') }}"></script>
+    <!-- Ajax 테스트용(미완성) -->
+    <!-- <script src="{{ url_for('static', filename='js/index.js') }}"></script> -->
 </body>
 </html>
