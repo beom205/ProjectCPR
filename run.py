@@ -4,7 +4,7 @@ import json
 import os
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 #폐렴 분류 모델
-from semi_model import SemiModel
+# from semi_model import SemiModel
 
 #from functools import partial
 #from werkzeug import secure_filename
@@ -16,7 +16,7 @@ IMG_FOLDER = os.path.join(os.path.join('static', 'img'),'upload_img')
 app.config['UPLOAD_FOLDER'] = IMG_FOLDER
 
 #폐렴 분류 모델 로딩
-PredictModel = SemiModel('v3_10-0.2601.hdf5')
+# PredictModel = SemiModel('v3_10-0.2601.hdf5')
 
 @app.route('/upload')
 def render_file():
@@ -52,9 +52,9 @@ def upload_imgs():
       img.save(full_filename)
 
       # 모델 없이 테스트 용
-      # prob = 0.984324
+      prob = 0.984324
       # 배포 용(모델 적용)
-      prob = PredictModel.predict_using_path(full_filename)
+      # prob = PredictModel.predict_using_path(full_filename)
 
       #print("#결과 : ",prob)
       #폐렴의심 여부 (1이면 폐렴, 0이면 정상)
@@ -80,5 +80,5 @@ def upload_text():
    
 if __name__ == '__main__':
     #서버 실행
-  #  app.run(debug = True)
-   app.run(host='0.0.0.0')
+   app.run(debug = True)
+  #  app.run(host='0.0.0.0')
