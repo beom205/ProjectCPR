@@ -1,8 +1,6 @@
 # Classify Pneumonia with Resnet50
 
-
-
-### 브랜치 설명 <br>
+<br>### 브랜치 설명 <br><br>
 * master : 배포용 버전 적용 브랜치(현재 개발완료한 v2 적용)
 * v1 : version 1, 1개의 사진만 분석
 * v2 : version 2, 사진 여러장 동시 분석, 결과별 표시, 실제 배포판
