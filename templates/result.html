@@ -27,7 +27,8 @@
         <div class="content">  
             <div id="big">
                 <p>Click Image</p>
-                <img>
+                <img id="classified_img">
+                <img id="cam_img">
             </div>
             <div id="photo_list" class="list">
                 <!-- <li>
@@ -78,7 +79,6 @@
 
         //li 엘리먼트 생성
         function createLiEle(index, data){
-
           index = parseInt(index)+1;
           var  pnAcc = data.acc;
           // console.log("data.isPneumonia : ",isPn)
@@ -92,10 +92,11 @@
                         <span>${pneText}</span>
                         <span>${data.acc}%</span>
                     </div>
-                    <img src="${data.imgs}">
+                    <img src="${data.img_path}">
                   `
           return liEle;
         }
+
       });
     </script>
 </body>

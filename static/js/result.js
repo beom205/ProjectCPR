@@ -1,7 +1,7 @@
 //이미지에 이벤트 핸들러 넣기-> 1. img src가져오기 2. class active 넣어서 css바꾸기 3.다른 class는 active 지우기  
 function setPhotoListEvent(){
   var lists = document.querySelectorAll(".list li");
-  var big_image = document.querySelector("#big img");
+  var classified_img = document.getElementById("classified_img");
   var currentimg;
 
   for (var i=0 ; i<lists.length ;i++){
@@ -19,8 +19,55 @@ function setPhotoListEvent(){
     currentimg=this;
     var img=this.querySelector('img');
     var img_src=img.getAttribute('src');
-    big_image.setAttribute("src",img_src);
+    // classified_img.setAttribute("src",img_src);
     click_img = document.querySelector("#big p");
     click_img.style.display="none";
+
+    getCamImage2(img_src);
+  }
+
+  function getCamImage(img_path){
+    console.log("clicked getCamImage")
+    // classified_img.setAttribute("src",img_path); 
+    var data = { img_path : img_path};
+    $.ajax({
+      type : 'POST',
+      contentType:'application/json',
+      url:'/cam',
+      data: JSON.stringify(data),
+      success: function(result){
+        // console.log("result : ",result);
+        console.log("성공")
+        var cam_img = document.getElementById("cam_img");
+        cam_img.dataset.path = "dd";
+        // cam_img.setAttribute("src",img_path);
+        // classified_img.setAttribute("src",img_path);
+        classified_img.setAttribute("src",result);
+      }
+    });
+  }
+  function getCamImage2(img_path){
+    console.log("clicked getCamImage")
+    // classified_img.setAttribute("src",img_path); 
+    var data = { img_path : img_path};
+    $.ajax({
+      url: "/cam2", // fix this to your liking
+      type:"POST",
+      data: JSON.stringify(data),
+      cache: false,
+      processData:false,
+      contentType:'application/json',
+      error: function(result){
+        console.log("upload error" , result);
+        console.log(result.getAllResponseHeaders());
+      },
+      success: function(result){
+        console.log("성공")
+        // alert("hello"); // if it's failing on actual server check your server FIREWALL + SET UP CORS
+        bytestring = result['status'];
+        image = bytestring.split('\'')[1];
+        classified_img.setAttribute('src' , 'data:image/jpeg;base64,'+image);
+      }
+    });
   }
 }

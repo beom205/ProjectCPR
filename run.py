@@ -1,10 +1,18 @@
 #import asyncio
 import matplotlib.pyplot as plt
 import json
-import os
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+import os, sys
+import io
+import base64
+from flask import Flask, render_template, request, redirect, url_for, jsonify, Response
+from PIL import Image
 #폐렴 분류 모델
-from semi_model import SemiModel
+# from semi_model import SemiModel
+
+import cv2
+
+from flask_cors import CORS,cross_origin
+
 
 #from functools import partial
 #from werkzeug import secure_filename
@@ -16,7 +24,10 @@ IMG_FOLDER = os.path.join(os.path.join('static', 'img'),'upload_img')
 app.config['UPLOAD_FOLDER'] = IMG_FOLDER
 
 #폐렴 분류 모델 로딩
-PredictModel = SemiModel('v3_10-0.2601.hdf5')
+# PredictModel = SemiModel('v3_10-0.2601.hdf5')
+
+
+cors = CORS(app, allow_headers='Content-Type', CORS_SEND_WILDCARD=True)
 
 @app.route('/upload')
 def render_file():
@@ -31,8 +42,60 @@ def result_page():
   return render_template('result.html')
 
 
+@app.route('/cam2', methods=['POST'])
+def send_cam2():
+  json_data = request.get_json()
+  # print("### cam ####",json_data)
+  full_filename = json_data['img_path']
+  #cv2Image = numpy data
+  cv2Image = cv2.imread(full_filename)
+  # print("#### cv2Image : ",cv2Image)
+  img = Image.fromarray(cv2Image.astype("uint8"))
+  rawBytes = io.BytesIO()
+  img.save(rawBytes, "JPEG")
+  rawBytes.seek(0)
+  img_base64 = base64.b64encode(rawBytes.read())
+  return jsonify({'status':str(img_base64)})
+
+
+@app.route('/cam', methods=['POST'])
+@cross_origin(origins='*', send_wildcard=True)
+def send_cam():
+  json_data = request.get_json()
+  # print("### cam ####",json_data)
+  full_filename = json_data['img_path']
+
+  # prepare headers for http request
+  content_type = 'image/jpeg'
+  headers = {'content-type': content_type}
+
+  #cv2Image = numpy data
+  cv2Image = cv2.imread(full_filename)
+  # print("#### cv2Image : ",cv2Image)
+
+  # encode image as jpeg
+  # _, img_encoded = cv2.imencode('.jpg', cv2Image)
+  # print("#### img_encoded : ",img_encoded)
+  # send http request with image and receive response
+  # img_encodedStr=img_encoded.tostring()
+
+  # data = cv2.imencode('.png', cv2Image)[1].tobytes()
+
+  # response_img = requests.post(test_url, data=img_encodedStr, headers=headers)
+  # return response_img;
+
+  # data = cv2.imencode('.png', cv2Image)[1].tobytes()
+  # data = cv2.imencode('.jpg', cv2Image)[1].tobytes()
+  # return Response(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + data + b'\r\n\r\n', mimetype='multipart/x-mixed-replace; boundary=frame')
+  # print("#### img_encodedStr : ",img_encodedStr)
+  # b64=base64.encodestring(img_encodedStr)
+
+  #response json
+  # return jsonify(hello='world')
+
+
 #이미지 서버에 저장 후 result page에 노출하기
-@app.route('/imgs',methods=['GET','POST'])
+@app.route('/imgs',methods=['POST'])
 def upload_imgs():
   if request.method == 'POST':
 
@@ -52,17 +115,16 @@ def upload_imgs():
       img.save(full_filename)
 
       # 모델 없이 테스트 용
-      # prob = 0.984324
+      prob = 0.984324
       # 배포 용(모델 적용)
-      prob = PredictModel.predict_using_path(full_filename)
-
+      # prob = PredictModel.predict_using_path(full_filename)
       #print("#결과 : ",prob)
       #폐렴의심 여부 (1이면 폐렴, 0이면 정상)
       isPneumonia = 1 if prob > 0.5 else 0
       #폐렴검출 정확도
       acc = int(prob*100)
       #응답할 결과 데이터
-      resultDataList.append({'imgs' : full_filename,
+      resultDataList.append({'img_path' : full_filename,
                    'acc' : acc, 'isPneumonia' : isPneumonia})
 
     # print("### resultDataList : ", resultDataList)
@@ -80,5 +142,5 @@ def upload_text():
    
 if __name__ == '__main__':
     #서버 실행
-  #  app.run(debug = True)
-   app.run(host='0.0.0.0')
+   app.run(debug = True)
+  #  app.run(host='0.0.0.0')
