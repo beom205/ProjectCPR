@@ -2,6 +2,7 @@
 function setPhotoListEvent(){
   var lists = document.querySelectorAll(".list li");
   var classified_img = document.getElementById("classified_img");
+  var cam_img = document.getElementById("cam_img");
   var currentimg;
 
   for (var i=0 ; i<lists.length ;i++){
@@ -12,18 +13,22 @@ function setPhotoListEvent(){
   lists[0].click();
 
   function clickHandler(e) {
+    console.log("클릭")
     if(currentimg){
         currentimg.classList.remove('active');
     }
     this.classList.add('active');
     currentimg=this;
-    var img=this.querySelector('img');
-    var img_src=img.getAttribute('src');
-    // classified_img.setAttribute("src",img_src);
+    var classified_img_src=this.querySelector('img').getAttribute('src');
+    var cam_img_data = this.querySelector('input').value;
+    // var img_src=img.getAttribute('src');
+    classified_img.setAttribute("src",classified_img_src);
+    cam_img.setAttribute("src",cam_img_data);
+    
     click_img = document.querySelector("#big p");
     click_img.style.display="none";
 
-    getCamImage2(img_src);
+    // getCamImage2(img_src);
   }
 
   function getCamImage(img_path){

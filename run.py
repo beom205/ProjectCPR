@@ -44,18 +44,28 @@ def result_page():
 
 @app.route('/cam2', methods=['POST'])
 def send_cam2():
+  type = "two"
   json_data = request.get_json()
   # print("### cam ####",json_data)
   full_filename = json_data['img_path']
-  #cv2Image = numpy data
-  cv2Image = cv2.imread(full_filename)
-  # print("#### cv2Image : ",cv2Image)
-  img = Image.fromarray(cv2Image.astype("uint8"))
-  rawBytes = io.BytesIO()
-  img.save(rawBytes, "JPEG")
-  rawBytes.seek(0)
-  img_base64 = base64.b64encode(rawBytes.read())
-  return jsonify({'status':str(img_base64)})
+
+  if type=="two":
+    # predict_cam_using_path
+     print("d")
+  elif type == "one":  
+    
+    #cv2Image = numpy data
+    cv2Image = cv2.imread(full_filename)
+    # cv2Image = PredictModel.cam(full_filename)
+    # print("#### cv2Image : ",cv2Image)
+    img = Image.fromarray(cv2Image.astype("uint8"))
+    rawBytes = io.BytesIO()
+    img.save(rawBytes, "JPEG")
+    rawBytes.seek(0)
+    img_base64 = base64.b64encode(rawBytes.read())
+    return jsonify({'status':str(img_base64)})
+
+
 
 
 @app.route('/cam', methods=['POST'])
@@ -116,17 +126,32 @@ def upload_imgs():
 
       # 모델 없이 테스트 용
       prob = 0.984324
+
       # 배포 용(모델 적용)
       # prob = PredictModel.predict_using_path(full_filename)
+      # result_set = PredictModel.predict_cam_using_path(full_filename)
+      # prob=result_set["prob"]
+      # superimposed_img=result_set["superimposed_img"]
+      #cam 테스트용
+      superimposed_img = cv2.imread(full_filename)
       #print("#결과 : ",prob)
+
       #폐렴의심 여부 (1이면 폐렴, 0이면 정상)
       isPneumonia = 1 if prob > 0.5 else 0
       #폐렴검출 정확도
       acc = int(prob*100)
+
+      #cam 결과 이미지 base64로 변환
+      img = Image.fromarray(superimposed_img.astype("uint8"))
+      rawBytes = io.BytesIO()
+      img.save(rawBytes, "JPEG")
+      rawBytes.seek(0)
+      img_base64 = base64.b64encode(rawBytes.read())
       #응답할 결과 데이터
       resultDataList.append({'img_path' : full_filename,
-                   'acc' : acc, 'isPneumonia' : isPneumonia})
-
+                   'acc' : acc, 'isPneumonia' : isPneumonia, 'cam_img':str(img_base64)})
+      
+      # return jsonify({'status':str(img_base64)})
     # print("### resultDataList : ", resultDataList)
 
     return render_template("result.html", resultDataList = resultDataList)

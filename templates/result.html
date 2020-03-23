@@ -27,8 +27,8 @@
         <div class="content">  
             <div id="big">
                 <p>Click Image</p>
-                <img id="classified_img">
-                <img id="cam_img">
+                <img id="classified_img" style="float:left">
+                <img id="cam_img" style="float:left">
             </div>
             <div id="photo_list" class="list">
                 <!-- <li>
@@ -85,7 +85,8 @@
           isPnClass = ((data.isPneumonia == 0)? "normal" : ((pnAcc >= 80)? "pnedan":"pne"));
           var pneText = "폐렴의심"
           var liEle = document.createElement("li");
-          
+          bytestring = data.cam_img;
+          image = bytestring.split('\'')[1];
           liEle.innerHTML = `
                     <div class="info ${isPnClass}">
                         <span>${index}</span>
@@ -93,7 +94,10 @@
                         <span>${data.acc}%</span>
                     </div>
                     <img src="${data.img_path}">
+                    <input type="hidden" name="cam_img" value="">
                   `
+          // liEle.querySelector('input').setAttribute('src' , 'data:image/jpeg;base64,'+image);
+          liEle.querySelector('input').value="data:image/jpeg;base64,"+image;
           return liEle;
         }
 
